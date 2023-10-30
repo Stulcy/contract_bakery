@@ -20,9 +20,13 @@ contract TaxHavenToken is ERC20 {
             token.allowance(msg.sender, address(this)) >= _amount,
             "Not enough allowance"
         );
-        transferFrom(msg.sender, address(this), _amount);
+        assert(token.transferFrom(msg.sender, address(this), _amount));
         _mint(msg.sender, _amount);
     }
 
-    function burn() external {}
+    function burn(uint256 _amount) external {
+        require(balanceOf(msg.sender) >= _amount, "Not enough balance");
+        assert(token.transfer(msg.sender, _amount));
+        _burn(msg.sender, _amount);
+    }
 }
